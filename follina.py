@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 
-import argparse
-import zipfile
-import tempfile
-import shutil
-import os
-import netifaces
-import ipaddress
-import random
-import base64
-import http.server
-import socketserver
-import string
-import socket
-import threading
+import argparse #for parsing command-line arguments
+import zipfile #for creating the ZIP archive that will contain the malicious Word document
+import tempfile #for creating a temporary directory to stage the creation of the Word document
+import shutil #for copying the skeleton of the Word document and modifying its contents
+import os #for working with the file system
+import netifaces #for determining the IP address of a network interface
+import ipaddress #for parsing IP addresses
+import random #for generating random characters
+import base64 #for encoding the PowerShell command in a format that is safe to include in an HTML file
+import http.server #for serving the HTML payload over HTTP
+import socketserver #for hosting the HTTP server
+import string #for generating random characters
+import socket #for binding to the HTTP server port
+import threading #for hosting the HTTP server on a separate thread
 
 parser = argparse.ArgumentParser()
 
