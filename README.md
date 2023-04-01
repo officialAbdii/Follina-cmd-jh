@@ -2,7 +2,6 @@
 
 --------------
 
-
 This Python script generates a maldoc, that executes a PowerShell command on the target machine. It also sets up an HTTP server to deliver the malicious payload to the target machine.
 
 The script takes several arguments, including the command to be executed on the target machine, the name and location of the output maldoc file, the network interface or IP address to host the HTTP server, the port to serve the HTTP server, and the port to serve the reverse shell on.
@@ -32,6 +31,32 @@ Detection evasion: The attackers typically use various techniques to evade detec
 
 The MSDT-Follina zero-day vulnerability is a serious threat to users of Windows operating systems. Microsoft has released a patch to fix the vulnerability, and users are strongly advised to update their systems as soon as possible to prevent exploitation. Additionally, users should be cautious when opening email attachments or clicking on links from unknown sources to avoid falling victim to phishing attacks.
 
+--------------
+
+Here is a step-by-step explanation of the code:
+
+The script imports several libraries, including argparse, zipfile, tempfile, shutil, os, netifaces, ipaddress, random, base64, http.server, socketserver, string, and threading.
+The script defines several command-line arguments using the argparse library. These arguments include the command to run on the victim's machine, the output maldoc file name, the network interface or IP address to host the HTTP server, the port to serve the HTTP server, and the port to serve the reverse shell on.
+The script defines a function called "main" that takes in the command-line arguments as an argument.
+The script attempts to parse the supplied interface by creating an instance of the IPv4Address class from the ipaddress library. If that fails, it attempts to use the netifaces library to get the IP address of the supplied interface. If both attempts fail, it prints an error message and exits.
+The script creates a temporary folder to stage the Microsoft Word document skeleton and then copies the skeleton to that folder.
+The script prepares a temporary location for the HTTP server.
+The script modifies the Word skeleton to include the HTTP server.
+The script rebuilds the original Office file.
+The script encodes the command to run on the victim's machine using base64 encoding.
+The script creates a unique MS-MSDT payload that is over 4096 bytes at minimum.
+The script creates an HTML endpoint and writes the HTML payload to the endpoint.
+The script defines a custom server class called ReuseTCPServer that reuses the TCP socket and binds to it.
+The script defines a custom handler class called Handler that logs messages and requests only when the reverse shell is not enabled.
+The script defines a function called serve_http that starts the HTTP server and serves requests forever.
+The script starts the HTTP server on all interfaces and prints a message to indicate that it is serving the HTML payload.
+The script checks if the reverse shell is enabled. If it is, it sets the command to run to include the Invoke-WebRequest command to download and execute a Netcat executable from GitHub.
+The script encodes the command again, this time using base64 encoding.
+The script creates another HTML payload that includes the new command and replaces the old payload.
+The script writes the new HTML payload to the index.html file.
+The script starts a new thread to serve the HTTP server.
+The script waits for the thread to finish.
+The program exits.
 --------------
 
 Create a "Follina" MS-MSDT attack with a malicious Microsoft Word document and stage a payload with an HTTP server.
