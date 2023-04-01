@@ -57,6 +57,7 @@ The script writes the new HTML payload to the index.html file.
 The script starts a new thread to serve the HTTP server.
 The script waits for the thread to finish.
 The program exits.
+
 --------------
 
 Create a "Follina" MS-MSDT attack with a malicious Microsoft Word document and stage a payload with an HTTP server.
