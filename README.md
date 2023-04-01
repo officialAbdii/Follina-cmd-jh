@@ -13,7 +13,24 @@ Next, the script encodes the PowerShell command as base64 and creates a unique M
 
 If the user has specified a reverse shell, the script downloads and executes a Netcat binary to establish a reverse shell on the target machine. The script creates a new thread to host the HTTP server and starts it. The anti-virus on the target system can flag the Netcat binary being downloaded so be careful.
 
+--------------
 
+The Microsoft MSDT-Follina zero-day vulnerability is a type confusion bug that allows attackers to execute arbitrary code on a victim's computer. The vulnerability was first discovered in early 2021 and is actively being exploited in the wild. Here's how the vulnerability works in detail:
+
+Initial infection: The attackers initially infect a victim's computer using a phishing email or other social engineering techniques. The payload is typically delivered through a malicious document or a link to a website hosting the exploit.
+
+Exploit delivery: The exploit uses the vulnerability in the Microsoft Diagnostic and Recovery Toolset (MSDaRT) to execute arbitrary code on the victim's computer. The vulnerability exists because of the way the MSDaRT toolset processes a specific type of file, called a cabinet file (CAB).
+The ms-msdt payload needs to be at least 4096 bytes in size because the payload is being delivered via a technique known as DLL search order hijacking. When a DLL is loaded by a Windows process, Windows will search for the DLL in several locations, including the current directory of the process. By creating a file with the same name as a DLL that the process is trying to load, an attacker can cause the process to load the attacker's file instead. However, if the attacker's file is smaller than the original DLL, the process may try to read beyond the end of the file and cause a crash. To avoid this, the attacker needs to ensure that the size of the malicious file is at least as large as the original DLL. In the case of the ms-msdt payload, the original DLL is typically around 4 KB in size, so the attacker needs to create a file of at least that size to avoid crashes.
+
+Type confusion: The vulnerability is a type confusion bug, which means it occurs when the program mistakenly uses an object of one type as if it were an object of another type. In this case, the vulnerability arises because the MSDaRT toolset does not properly check the type of objects when processing CAB files.
+
+Memory corruption: The exploit triggers a memory corruption vulnerability in the MSDaRT toolset by providing it with a specially crafted CAB file that causes the toolset to allocate memory incorrectly. This creates a situation where an attacker can control the contents of memory and execute arbitrary code.
+
+Payload execution: The exploit then executes the attacker's payload, typically a Remote Access Trojan (RAT), which allows the attacker to take full control of the victim's computer. The RAT can be used to steal sensitive data, install additional malware, or perform other malicious actions.
+
+Detection evasion: The attackers typically use various techniques to evade detection by antivirus software, including packing the payload with custom packers, encrypting the payload, or using fileless techniques.
+
+The MSDT-Follina zero-day vulnerability is a serious threat to users of Windows operating systems. Microsoft has released a patch to fix the vulnerability, and users are strongly advised to update their systems as soon as possible to prevent exploitation. Additionally, users should be cautious when opening email attachments or clicking on links from unknown sources to avoid falling victim to phishing attacks.
 
 --------------
 
